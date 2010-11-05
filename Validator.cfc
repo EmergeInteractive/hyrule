@@ -4,8 +4,9 @@
  */
 component {
 
+	property IRulesBeanFactory beanFactory;
 	property IValidationMessageProvider validationMessageProvider;
-
+	
 	public Validator function init(String rb="DefaultValidatorMessages"){
 		setValidationMessageProvider(new ValidatorMessage(arguments.rb));
 		return this;
@@ -227,6 +228,12 @@ component {
 						case "CUSTOM" : {
 							// TODO: We should throw a custom error here if the component was not found
 							validator = createObject("component","#prop.custom#");
+							break;
+						}
+						
+						case "CUSTOMBEAN" : {
+							// TODO: We should throw a custom error if the bean factory is not set
+							validator = getBeanFactory().getBean( prop.customBean );
 							break;
 						}
 						
