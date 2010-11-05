@@ -16,7 +16,7 @@
 	}
 	
 	public void function addError(required string class,required string validationlevel,required string property,required string validationType,required string message){
-		var validationError = new validationError();
+		var validationError = new ValidationError();
 		
 		validationError.setClass(arguments.class);
 		validationError.setValidationlevel(arguments.validationlevel);

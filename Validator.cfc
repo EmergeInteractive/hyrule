@@ -12,7 +12,7 @@ component {
 	}
 
 	public ValidationResult function validate(required any dto,Struct dtoMD,ValidationResult vr,Array properties){
-		var validationResult = (isNUll(arguments.vr)) ?  new validationResult() : arguments.vr;	
+		var validationResult = (isNUll(arguments.vr)) ?  new ValidationResult() : arguments.vr;	
 		var dtoMetaData = (isNUll(arguments.dtoMD)) ?  getMetaData(arguments.dto) : arguments.dtoMD;
 		
 		//recurse down through the inheritence chain
@@ -66,12 +66,12 @@ component {
 						}
 
 						case "RANGE" : {
-							validator = new rules.rangeValidator();
+							validator = new rules.RangeValidator();
 							break;
 						}
 
 						case "SIZE" : {
-							validator = new rules.sizeValidator();
+							validator = new rules.SizeValidator();
 							break;
 						}
 
@@ -115,12 +115,12 @@ component {
 						}
 
 						case "PASSWORD" : {
-							validator = new rules.passwordValidator();
+							validator = new rules.PasswordValidator();
 							break;
 						}
 						
 						case "EMAIL" : {
-							validator = new rules.emailValidator();
+							validator = new rules.EmailValidator();
 							break;
 						}
 
@@ -185,17 +185,17 @@ component {
 						}
 
 						case "BINARY" : {
-							validator = new rules.binaryValidator();
+							validator = new rules.BinaryValidator();
 							break;
 						}
 
 						case "NUMERIC" : {
-							validator = new rules.numericValidator();
+							validator = new rules.NumericValidator();
 							break;
 						}
 
 						case "STRING" : {
-							validator = new rules.stringValidator();
+							validator = new rules.StringValidator();
 							break;
 						}
 
@@ -227,7 +227,7 @@ component {
 
 						case "CUSTOM" : {
 							// TODO: We should throw a custom error here if the component was not found
-							var validator = createObject("component","#prop.custom#");
+							validator = createObject("component","#prop.custom#");
 							break;
 						}
 						
