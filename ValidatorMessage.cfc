@@ -4,7 +4,7 @@
  * @accessors true
  * @output false
  */
-component implements="iValidationMessageProvider" {
+component implements="IValidationMessageProvider" {
 
 	property string resourceBundle;
 	property array messages;
