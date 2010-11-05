@@ -11,7 +11,7 @@ component {
 		return this;
 	}
 
-	public ValidationResult function validate(required any dto,Struct dtoMD,ValidationResult vr,Array properties){
+	public ValidationResult function validate(required any dto,Struct dtoMD,ValidationResult vr,String context="*"){
 		var validationResult = (isNUll(arguments.vr)) ?  new ValidationResult() : arguments.vr;	
 		var dtoMetaData = (isNUll(arguments.dtoMD)) ?  getMetaData(arguments.dto) : arguments.dtoMD;
 		
@@ -232,7 +232,7 @@ component {
 						
 					}//end switch(key)
 										
-					if( !isSimpleValue(validator) && !validator.isValid(prop, dto) ) {					
+					if( !isSimpleValue(validator) && !validator.isValid(prop, arguments.context, arguments.dto) ) {					
 						var message = structKeyExists(prop,"message") ? prop.message : getValidationMessageProvider().getMessageByType(key,prop);	
 						validationResult.addError(dtoMetaData.name,'property',prop.name,key,message);
 					}
