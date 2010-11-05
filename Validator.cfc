@@ -43,7 +43,6 @@ component {
 				// once we have checked null and empty we can do any other validations
 				for(key in prop){
 								
-					var message = structKeyExists(prop,"message") ? prop.message : getValidationMessageProvider().getMessageByType(key,prop);	
 					var validator = '';
 										
 					switch(key){
@@ -233,7 +232,8 @@ component {
 						
 					}//end switch(key)
 										
-					if( !isSimpleValue(validator) && !validator.isValid(prop) ) {					
+					if( !isSimpleValue(validator) && !validator.isValid(prop, dto) ) {					
+						var message = structKeyExists(prop,"message") ? prop.message : getValidationMessageProvider().getMessageByType(key,prop);	
 						validationResult.addError(dtoMetaData.name,'property',prop.name,key,message);
 					}
 				}
