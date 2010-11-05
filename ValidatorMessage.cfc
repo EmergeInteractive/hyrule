@@ -6,31 +6,44 @@
  */
 component implements="IValidationMessageProvider" {
 
+	property Struct messages;
 	property String resourceBundle;
-	property Array messages;
-
+	
 	public ValidatorMessage function init(required String rb){
 		setResourceBundle(arguments.rb);
-		setMessages(arrayNew(1));
+		setMessages(structNew());
 		loadResourceBundle();
 		return this;
+	}
+	
+	public void function addMessage(required String type, required String message){
+		var messages = getMessages();
+		message[arguments.type] = arguments.message;
 	}
 
 	public String function getMessageByType(String type,Struct prop){
 		var messages = getMessages();
 		var errorMessage = "";
-			
-		for(i=1; i <= arrayLen(messages); ++i){
-			if(messages[i].type == arguments.type){
-				if(!structKeyExists(arguments.prop,"display")){
-					prop.display = humanize(prop.name);
-				}
-				errorMessage = replaceTemplateText(messages[i].message,prop);					
-				
-			}
+		var key = arguments.type;
+		
+		if (arguments.type == "custom") {
+			key = arguments.prop.custom;
 		}
-
+		
+		if (hasMessage(key)) {
+			if(!structKeyExists(arguments.prop,"display")){
+				prop.display = humanize(prop.name);
+			}
+			
+			errorMessage = replaceTemplateText(messages[key],prop);
+		}
+		
 		return errorMessage;
+	}
+	
+	public Boolean function hasMessage(required String type){
+		var messages = getMessages();
+		return structKeyExists(messages, arguments.type);
 	}
 	
 	private String function replaceTemplateText(String message,Struct prop){
@@ -57,7 +70,8 @@ component implements="IValidationMessageProvider" {
 	private void function loadResourceBundle(Boolean isAbsolutePath=false){
 		var dir = getDirectoryFromPath(getCurrentTemplatePath());
 		var rbPath = dir & "resources/" & getResourceBundle();
-
+		var messages = {};
+		
 		// read in the properties for the resource bundle
 		if(findNoCase(".properties",getResourceBundle())){
 			var file = fileOpen(rbPath);
@@ -66,15 +80,18 @@ component implements="IValidationMessageProvider" {
 		}
 
 	    while (! fileIsEOF(file)) {
-	        var x = fileReadLine(file);
-			var type = listFirst(x,"=");
-			var message = listLast(x,"=");
-			arrayAppend(getMessages(),{type=type,message=message});
+	        var line = fileReadLine(file);
+			var type = trim(listFirst(line,"="));
+			var message = trim(listLast(line,"="));
+			if (type!="") {
+				messages[type] = message;
+			}
 	    }
-
+		
+		setMessages(messages);
 	}
 
-	public Array function getDefaultErrorMessages(){
+	public Struct function getDefaultErrorMessages(){
 		return getMessages();
 	}
 
