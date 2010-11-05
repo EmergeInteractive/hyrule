@@ -28,6 +28,8 @@ component implements="IValidationMessageProvider" {
 		
 		if (arguments.type == "custom") {
 			key = arguments.prop.custom;
+		} else if (arguments.type == "coldspringBean") {
+			key = arguments.prop.coldspringBean;
 		}
 		
 		if (hasMessage(key)) {
