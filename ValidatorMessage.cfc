@@ -67,19 +67,25 @@ component implements="IValidationMessageProvider" {
 		return m;
 	}	
 
-	private void function loadResourceBundle(Boolean isAbsolutePath=false){
-		var dir = getDirectoryFromPath(getCurrentTemplatePath());
-		var rbPath = dir & "resources/" & getResourceBundle();
+	private void function loadResourceBundle(){
+		var currentDirectory = getDirectoryFromPath(getCurrentTemplatePath());
+		var defaultPath = currentDirectory & "resources/";
 		var messages = {};
+		var filePath = getResourceBundle();
 		
-		// read in the properties for the resource bundle
-		if(findNoCase(".properties",getResourceBundle())){
-			var file = fileOpen(rbPath);
-		} else {
-			var file = fileOpen(rbPath & ".properties");
+		if (!findNoCase(".properties", filePath)) {
+			filePath = filePath & ".properties";
 		}
-
-	    while (! fileIsEOF(file)) {
+		if (!findNoCase("/", filePath)) {
+			filePath = defaultPath & filePath;
+		}
+		
+		if (!fileExists(filePath)) {
+			throw(message="#filePath# not found");
+		}
+		var file = fileOpen(filePath);
+	
+	    while (!fileIsEOF(file)) {
 	        var line = fileReadLine(file);
 			var type = trim(listFirst(line,"="));
 			var message = trim(listLast(line,"="));
