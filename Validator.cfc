@@ -4,7 +4,7 @@
  */
 component {
 
-	property IRulesBeanFactory beanFactory;
+	property coldspring.beans.BeanFactory beanFactory;
 	property IValidationMessageProvider validationMessageProvider;
 	
 	public Validator function init(String rb="DefaultValidatorMessages"){
@@ -226,14 +226,19 @@ component {
 						}
 
 						case "CUSTOM" : {
-							// TODO: We should throw a custom error here if the component was not found
-							validator = createObject("component","#prop.custom#");
+							try {
+								validator = createObject("component","#prop.custom#");
+							} catch(any e) {
+								throw(type="ValidatorError", message="Custom validation component #prop.custom# not found");
+							}
 							break;
 						}
 						
-						case "CUSTOMBEAN" : {
-							// TODO: We should throw a custom error if the bean factory is not set
-							validator = getBeanFactory().getBean( prop.customBean );
+						case "COLDSPRINGBEAN" : {
+							if (isNull(getBeanFactory())) {
+								throw(type="ValidatorError", message="Coldspring Bean Factory is not injected in Validator");
+							}
+							validator = getBeanFactory().getBean( prop.coldspringBean );
 							break;
 						}
 						
