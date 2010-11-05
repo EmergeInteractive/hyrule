@@ -21,23 +21,16 @@ component implements="IValidationMessageProvider" {
 		message[arguments.type] = arguments.message;
 	}
 
-	public String function getMessageByType(String type,Struct prop){
+	public String function getMessageByType(String type, Struct prop){
 		var messages = getMessages();
 		var errorMessage = "";
-		var key = arguments.type;
 		
-		if (arguments.type == "custom") {
-			key = arguments.prop.custom;
-		} else if (arguments.type == "coldspringBean") {
-			key = arguments.prop.coldspringBean;
-		}
-		
-		if (hasMessage(key)) {
+		if (hasMessage(arguments.type)) {
 			if(!structKeyExists(arguments.prop,"display")){
-				prop.display = humanize(prop.name);
+				arguments.prop.display = humanize(arguments.prop.name);
 			}
 			
-			errorMessage = replaceTemplateText(messages[key],prop);
+			errorMessage = replaceTemplateText(messages[arguments.type], arguments.prop);
 		}
 		
 		return errorMessage;

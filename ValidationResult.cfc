@@ -8,23 +8,23 @@
 	}
 	
 	public Boolean function hasErrors() {
-		return (ArrayLen(getErrors()) > 0); 
+		return (arrayLen(getErrors()) > 0); 
 	}
 	
 	public Array function getErrors(){
 		return variables.errors;
 	}
 	
-	public void function addError(required string class,required string validationlevel,required string property,required string validationType,required string message){
+	public void function addError(required string class,required string validationLevel,required string property,required string validationType,required string message){
 		var validationError = new ValidationError();
 		
 		validationError.setClass(arguments.class);
-		validationError.setValidationlevel(arguments.validationlevel);
-		validationError.setProperty(arguments.property);
-		validationError.setvalidationType(arguments.validationType);
 		validationError.setMessage(arguments.message);
+		validationError.setProperty(arguments.property);
+		validationError.setValidationLevel(arguments.validationLevel);
+		validationError.setValidationType(arguments.validationType);
 		
-		ArrayAppend(variables.errors,validationError);
+		arrayAppend(variables.errors,validationError);
 	}
 
 }

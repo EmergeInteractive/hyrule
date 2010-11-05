@@ -22,7 +22,7 @@ component {
 		}
 
 		var props = (isNULL(dtoMetaData.properties)) ? [] : dtoMetaData.properties;
-
+		
 		// for each property in the array
 		for(var i=1; i <= arrayLen(props); ++i) {
 			
@@ -234,20 +234,50 @@ component {
 							break;
 						}
 						
+						case "CUSTOMLIST" : {
+							for (var custom in listToArray(prop.customList)) {
+								try {
+									validator = createObject("component","#custom#");
+									if( !validator.isValid(prop, arguments.context, arguments.dto) ) {					
+										addErrorMessage(componentName=dtoMetaData.name, property=prop, validationResult=validationResult, validationType=custom);
+									}
+								} catch(any e) {
+									throw(type="ValidatorError", message="Custom validation component #custom# not found");
+								}
+							}
+							break;
+						}
+						
 						case "COLDSPRINGBEAN" : {
 							if (isNull(getBeanFactory())) {
 								throw(type="ValidatorError", message="Coldspring Bean Factory is not injected in Validator");
 							}
-							validator = getBeanFactory().getBean( prop.coldspringBean );
+							validator = getBeanFactory().getBean(prop.coldspringBean);
+							break;
+						}
+						
+						case "COLDSPRINGBEANLIST" : {
+							if (isNull(getBeanFactory())) {
+								throw(type="ValidatorError", message="Coldspring Bean Factory is not injected in Validator");
+							}
+							for (var beanName in listToArray(prop.coldspringBeanList)) {
+								validator = getBeanFactory().getBean(beanName);
+								if( !validator.isValid(prop, arguments.context, arguments.dto) ) {					
+									addErrorMessage(componentName=dtoMetaData.name, property=prop, validationResult=validationResult, validationType=beanName);
+								}
+							}
 							break;
 						}
 						
 					}//end switch(key)
-										
-					if( !isSimpleValue(validator) && !validator.isValid(prop, arguments.context, arguments.dto) ) {					
-						var message = structKeyExists(prop,"message") ? prop.message : getValidationMessageProvider().getMessageByType(key,prop);	
-						validationResult.addError(dtoMetaData.name,'property',prop.name,key,message);
-					}
+					
+					if ( right(key,4) != "LIST" && !isSimpleValue(validator)  && !validator.isValid(prop, arguments.context, arguments.dto) ) {
+						var validationType = key;
+						if ( key == "CUSTOM" || key == "COLDSPRINGBEAN" ) {
+							validationType = prop[key];
+						}
+						addErrorMessage(componentName=dtoMetaData.name, property=prop, validationResult=validationResult, validationType=validationType);
+					}		
 				}
 
 			}
@@ -255,6 +285,18 @@ component {
 		}
 		
 		return validationResult;
+	}
+	
+	// PRIVATE
+	
+	private void function addErrorMessage(String componentName, Struct property, ValidationResult validationResult, String validationType) {
+		var message = "";
+		if (structKeyExists(arguments.property,"message")) {
+			message = arguments.property.message;
+		} else {
+			message = getValidationMessageProvider().getMessageByType(arguments.validationType, arguments.property);
+		}
+		arguments.validationResult.addError(arguments.componentName, 'property', arguments.property.name, UCase(arguments.validationType), message);
 	}
 	
 }
