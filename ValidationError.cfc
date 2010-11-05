@@ -6,7 +6,7 @@
 	property string validationType;
 	property string message;
 	
-	public validationError function init(){
+	public ValidationError function init(){
 		return this;
 	}
 	

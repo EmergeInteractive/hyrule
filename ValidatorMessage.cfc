@@ -6,8 +6,8 @@
  */
 component implements="IValidationMessageProvider" {
 
-	property string resourceBundle;
-	property array messages;
+	property String resourceBundle;
+	property Array messages;
 
 	public ValidatorMessage function init(required String rb){
 		setResourceBundle(arguments.rb);
@@ -16,7 +16,7 @@ component implements="IValidationMessageProvider" {
 		return this;
 	}
 
-	public string function getMessageByType(String type,Struct prop){
+	public String function getMessageByType(String type,Struct prop){
 		var messages = getMessages();
 		var errorMessage = "";
 			
@@ -33,7 +33,7 @@ component implements="IValidationMessageProvider" {
 		return errorMessage;
 	}
 	
-	private string function replaceTemplateText(String message,Struct prop){
+	private String function replaceTemplateText(String message,Struct prop){
 		var templates = reMatchNoCase("({)([\w])+?(})",arguments.message);
 		var m = arguments.message;
 		
@@ -74,11 +74,11 @@ component implements="IValidationMessageProvider" {
 
 	}
 
-	public array function getDefaultErrorMessages(){
+	public Array function getDefaultErrorMessages(){
 		return getMessages();
 	}
 
-	private string function humanize(String text){
+	private String function humanize(String text){
 		var loc = {};
 		loc.returnValue = reReplace(arguments.text, "([[:upper:]])", " \1", "all"); 
 		loc.returnValue = reReplace(loc.returnValue, "([[:upper:]]) ([[:upper:]]) ", "\1\2", "all"); 

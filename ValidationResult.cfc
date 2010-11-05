@@ -1,17 +1,17 @@
 ﻿component accessors="true" hint="I hold the results of a call to the HyRule validator server validate function." {
 
-	property name="errors" type="array";
+	property Array errors;
 
-	public validationResult function init(){
+	public ValidationResult function init(){
 		setErrors([]);
 		return this;
 	}
 	
-	public boolean function hasErrors() {
+	public Boolean function hasErrors() {
 		return (ArrayLen(getErrors()) > 0); 
 	}
 	
-	public array function getErrors(){
+	public Array function getErrors(){
 		return variables.errors;
 	}
 	

@@ -4,7 +4,7 @@
  */
 component {
 
-	property ValidationMessageProvider;
+	property String validationMessageProvider;
 
 	public Validator function init(String rb="DefaultValidatorMessages"){
 		setValidationMessageProvider(new ValidatorMessage(arguments.rb));
