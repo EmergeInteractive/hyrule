@@ -1,8 +1,7 @@
 /**
  * Hyrule Validator
- * @accessors true
  */
-component {
+component accessors="true" {
 
 	property coldspring.beans.BeanFactory beanFactory;
 	property IValidationMessageProvider validationMessageProvider;

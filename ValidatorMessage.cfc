@@ -1,10 +1,9 @@
 /**
  * @displayname Validator Message
  * @hint I will load and retrieve default messages from the properties file passed in.
- * @accessors true
  * @output false
  */
-component implements="IValidationMessageProvider" {
+component accessors="true" implements="IValidationMessageProvider" {
 
 	property Struct messages;
 	property String resourceBundle;
